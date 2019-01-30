@@ -1,4 +1,4 @@
-ssl s_client -connect your_win7_remote_host:5986
+openssl s_client -connect your_win7_remote_host:5986
 
 Protocol displayed has to be TLSv1.2. Follow the steps in link provided to create necessary registry keys and after restart it should work. That is:
 
