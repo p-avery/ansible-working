@@ -1,0 +1,13 @@
+ssl s_client -connect your_win7_remote_host:5986
+
+Protocol displayed has to be TLSv1.2. Follow the steps in link provided to create necessary registry keys and after restart it should work. That is:
+
+Create entry DefaultSecureProtocols with value 0x00000800 (for TLSv1.2 only) or 0x00000A00 (for both TLSv1.1 and TLSv1.2) in keys 
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp
+
+and (for x64 machines)
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp
+
+Create entry DisabledByDefault with value 0 in key
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Server
