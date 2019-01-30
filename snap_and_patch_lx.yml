@@ -11,14 +11,6 @@
     become: false
 
   - block:
-    - name: create snapshot
-      vmware_guest_snapshot:
-        name: "{{ inventory_hostname }}"
-        state: present
-        snapshot_name: pre-upgrade
-      connection: local
-      become: false
-
     - name: upgrade all packages
       package:
         name: *
