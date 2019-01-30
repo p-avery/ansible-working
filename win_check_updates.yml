@@ -1,0 +1,8 @@
+---
+- name: check for missing updates
+  hosts: all
+  tasks:
+  - name: Check for missing updates
+    win_updates: 
+      state: searched
+    register: update_count
