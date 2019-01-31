@@ -1,0 +1,51 @@
+---
+- name: check for missing updates
+  hosts: all
+  tasks:
+  - name: Check for missing updates
+    win_updates: 
+      category_names: "{{ patch_cat }}"
+      state: searched
+    register: update_count
+
+  - name: Apply missing updates
+    win_updates:
+      category_names: "{{ patch_cat }}"
+      state: installed
+    register: update_result
+    when: update_count.found_update_count >= 1
+
+  - name: 1st windows reboot
+    win_reboot:
+    when: update_result.reboot_required
+
+  - name: Check for missing updates round 2
+    win_updates: 
+      category_names: "{{ patch_cat }}"
+      state: searched
+    register: update_count_2
+
+  - when: update_count_2.found_update_count >= 1
+    block:
+    - name: Apply missing updates round 2
+      win_updates:
+        category_names: "{{ patch_cat }}"
+        state: installed
+      register: update_2_result
+
+    - name: 2nd windows reboot
+      win_reboot:
+      when: update_2_result.reboot_required
+
+    - name: Check for missing updates round 3
+      win_updates: 
+        category_names: "{{ patch_cat }}"
+        state: searched
+      register: update_count_3
+        
+    - when: update_count_3.found_update_count >= 1
+      block:
+      - debug:
+          msg: still missing updates please investigate
+        
+    
