@@ -1,5 +1,5 @@
 ---
-- name: check for missing updates
+- name: Patch Windows 2 reboots and 3 checks
   hosts: all
   tasks:
   - name: Check for missing updates
