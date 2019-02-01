@@ -1,0 +1,41 @@
+---
+- name: Create cmdb record
+  hosts: all
+  
+  vars:
+    table: cmdb_ci_server
+    short_description: "This is a test created by Ansible"
+    state: present
+  vars_files:
+    - snow.eyml
+  tasks:
+  - set_fact:
+      table: 'cmdb_ci_win_server'
+      os_version: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
+      ip_address: "{{ ansible_ip_addresses }}"
+    when: ansible_os_family == "Windows"
+
+  - set_fact:
+      table: 'cmdb_ci_linux_server'
+      os_version: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
+      ip_address: "{{ ansible_all_ipv4_addresses }}"
+    when: ansible_os_family == "RedHat"
+    
+  - name: Create an cmdb record
+    snow_record:
+      username: "{{ sn_user }}"
+      password: "{{ sn_pass }}"
+      instance: "{{ sn_instance }}"
+      state: "{{ state }}"
+      data:
+        name: "{{ ansible_fqdn }}"
+        cpu_count: "{{ ansible_processor_count }}"
+        ram: "{{ ansible_memtotal_mb }}"
+        host_name: "{{ ansible_hostname }}"
+        serial_number: "{{ ansible_product_serial }}"
+        os_version: "{{ os_version }}"
+        ip_address: "{{ ip_address }}"
+        cpu_core_count: "{{ ansible_processor_cores }}"
+        vendor: "{{ ansible_system_vendor }}"
+      table: "{{ table }}"
+    delegate_to: localhost  
