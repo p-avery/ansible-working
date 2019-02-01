@@ -17,7 +17,7 @@
         name: "{{ inventory_hostname }}"
         state: present
         snapshot_name: pre-upgrade
-      connection: local
+      delegate_to: localhost
       become: false
       
     - name: Apply missing updates
@@ -60,22 +60,22 @@
             msg: still missing updates please investigate
         
     rescue:
-     - name: restore snapshot
-       vmware_guest_snapshot:
-         datacenter: "{{ datacenter_name }}"
-         folder: "{{ folder }}"
-         name: "{{ inventory_hostname }}"
-         state: revert
-         snapshot_name: pre-upgrade
-       connection: local
-       become: false
+      - name: restore snapshot
+        vmware_guest_snapshot:
+          datacenter: "{{ datacenter_name }}"
+          folder: "{{ folder }}"
+          name: "{{ inventory_hostname }}"
+          state: revert
+          snapshot_name: pre-upgrade
+        delegate_to: localhost
+        become: false
     
-     - name: power on guest
-       vmware_guest:
-         name: "{{ inventory_hostname }}"
-         state: poweredon
-       connection: local
-       become: false
+      - name: power on guest
+        vmware_guest:
+          name: "{{ inventory_hostname }}"
+          state: poweredon
+        delegate_to: localhost
+        become: false
     
-     - debug:
-         msg: "{{ inventory_hostname }} failed and was restored from its snapshot"
+      - debug:
+          msg: "{{ inventory_hostname }} failed and was restored from its snapshot"
