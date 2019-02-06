@@ -1,0 +1,34 @@
+---
+- name: Create ticket with notes
+  hosts: all
+  
+  vars:
+    table: incident
+    short_description: "This is a test created by Ansible"
+    state: present 
+    severity: 3
+    priority: 3
+    category: Hardware
+    comments: Testing 123
+  vars_files:
+    - snow.eyml
+  tasks:
+  
+  - name: Create an incident/change_request
+    snow_record:
+      username: "{{ sn_user }}"
+      password: "{{ sn_pass }}"
+      instance: "{{ sn_instance }}"
+      state: "{{ state }}"
+      data:
+        short_description: "{{ short_description }}"
+        severity: "{{ severity }}"
+        priority: "{{ priority }}"
+        category: "{{ category }}"
+        comments: "{{ comments }}"
+      table: "{{ table }}"
+    register: new_incident
+    delegate_to: localhost
+    
+  - debug:
+      var: new_incident.record.number
