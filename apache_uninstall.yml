@@ -1,0 +1,26 @@
+---
+- name: Uninstall Apache Web Server
+  hosts: web
+  become: yes
+  tasks:
+  - name: Gather Service Facts
+    service_facts:
+    
+  - name: Stop Apache Service
+    service:
+      name: httpd
+      state: stopped
+    when: "'httpd.service' in services and 'running' in services['httpd.service'].state"
+    
+  - name: Uninstall Apache Package
+    yum:
+      name: httpd
+      state: absent
+      
+  - name: Close Firewall traffic for web
+    firewalld:
+      service: http
+      permanent: yes
+      state: disabled
+      immediate: yes
+    when: "'firewalld.service' in services and 'running' in services['firewalld.service'].state"
