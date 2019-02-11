@@ -9,6 +9,5 @@
 
   - name: check for updates (yum)
     yum: 
-      list: updates 
-      update_cache: true
+      list: updates
     register: yum_updates
