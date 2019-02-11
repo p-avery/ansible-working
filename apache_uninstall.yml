@@ -1,6 +1,6 @@
 ---
 - name: Uninstall Apache Web Server
-  hosts: web
+  hosts: all
   become: yes
   tasks:
   - name: Gather Service Facts
