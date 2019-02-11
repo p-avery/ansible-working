@@ -1,0 +1,25 @@
+---
+- name: Install Apache Web Server
+  hosts: all
+  become: yes
+  tasks:
+  - name: Install Apache Package
+    yum:
+      name: httpd
+      state: present
+
+  - name: Start Apache Service
+    service:
+      name: httpd
+      state: started
+
+  - name: Gather Service Facts
+    service_facts:
+
+  - name: Open up Firewall traffic for web
+    firewalld:
+      service: http
+      permanent: yes
+      state: enabled
+      immediate: yes
+    when: "'firewalld.service' in services and 'running' in services['firewalld.service'].state"
