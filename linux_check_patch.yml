@@ -1,12 +1,14 @@
 ---
 - name: Check if updates available
   hosts: all
+  become: true
   tasks:
   - name: ensure yum-utils Exists
     yum:
       name: yum-utils
       state: present
-
+      update_cache: true
+      
   - name: check for updates (yum)
     yum: 
       list: updates
