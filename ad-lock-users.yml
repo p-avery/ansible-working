@@ -1,0 +1,9 @@
+---
+- name: lock list of users in AD
+  hosts: Windows
+  become: True
+  tasks:
+  - name: Ensure user bob is absent
+    win_domain_user:
+      name: "{{ users }}"
+      account_locked: yes
